@@ -46,8 +46,8 @@ data = es.search(index="logs*", scroll="2m",body={
 	    #  ],
 	      "filter": [
         	{"range" : {"m_LogDate" : { 
-                "gte" : "2020-12-21T00:00:00.000Z", 
-                "lte" : "2020-12-28"}}}
+                "gte" : "2020-12-01T00:00:00.000Z", 
+                "lte" : "2020-12-21"}}}
 	        ]
 	  }
 	  }
@@ -81,6 +81,6 @@ print (df_lst.shape)
 print(list(df_lst.columns.values))
 #df_lst = df_lst.sort_values('m_LogDate').drop_duplicates('m_To',keep='last')
 print (df_lst.shape)
-df_lst.to_csv(directory + "mta_delivered_211220.csv", index=False)
+df_lst.to_csv(directory + "mta_expired_011220.csv", index=False)
 #print (data['hits'][1])
 #print(df)
