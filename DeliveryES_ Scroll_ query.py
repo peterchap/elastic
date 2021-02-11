@@ -39,15 +39,15 @@ data = es.search(index="logs*", scroll="2m",body={
 	  "query" : {
 	    "bool":{
 	    "must": [ 
-	      {"match" :{"m_Status": "EXPIRED"}} 
+	      {"match" :{"m_Status": "DEFERED"}} 
 	      ],
 	   #"must_not": [
 	   #   {"match" :{"m_Process": "mailgun"}}
 	    #  ],
 	      "filter": [
         	{"range" : {"m_LogDate" : { 
-                "gte" : "2020-12-01T00:00:00.000Z", 
-                "lte" : "2020-12-21"}}}
+                "gte" : "2020-12-29T00:00:00.000Z", 
+                "lte" : "2021-01-19"}}}
 	        ]
 	  }
 	  }
@@ -81,6 +81,6 @@ print (df_lst.shape)
 print(list(df_lst.columns.values))
 #df_lst = df_lst.sort_values('m_LogDate').drop_duplicates('m_To',keep='last')
 print (df_lst.shape)
-df_lst.to_csv(directory + "mta_expired_011220.csv", index=False)
+df_lst.to_csv(directory + "mta_defered_170121.csv", index=False)
 #print (data['hits'][1])
 #print(df)
