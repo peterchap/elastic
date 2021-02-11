@@ -116,7 +116,7 @@ def blocker (row):
         elif '6.0' in row['m_StatusCode']:
             return '1&1 Reputation Block'
         else:
-            return '1&1 Other'
+            return '1&1 Unknown'
     elif row['Group'] == 'Apple':
         if '4.0.0' in row['m_StatusCode']:
             return 'Apple Throttled'
@@ -133,7 +133,7 @@ def blocker (row):
         elif ('proofpoint') in str(row['m_LogEntry']).lower():
             return 'Proofpoint'
         else:
-            return 'Apple Other'
+            return 'Apple Unknown'
     elif row['Group'] == 'BT':
         if '4.0.0' in row['m_StatusCode']:
             return 'BT Throttled'
@@ -148,7 +148,7 @@ def blocker (row):
         elif row['m_StatusCode'] == '5.5.4':
             return 'BT Spam block'
         else:
-            return 'BT Other'
+            return 'BT Unknown'
     elif row['Group'] == 'Google':
         if '4.0.0' in row['m_StatusCode']:
             return 'Google Spam Block'
@@ -163,10 +163,12 @@ def blocker (row):
         elif '6.0' in row['m_StatusCode']:
             return 'Google Reputation Block'
         else:
-            return 'Google Other'
+            return 'Google Unknown'
     elif row['Group'] == 'GMail':
         if '4.0.0' in row['m_StatusCode']:
             return 'GMail Spam Block'
+        elif '4.2.1' in row['m_StatusCode']:
+            return 'GMail Spam Throttle'
         elif '4.5.0' in row['m_StatusCode']:
             if 'trend micro' in row['m_LogEntry'].lower():
                 return  'Gmail Trend Micro Block'
@@ -183,7 +185,7 @@ def blocker (row):
         elif '6.0' in row['m_StatusCode']:
             return 'GMail Reputation Block'
         else:
-            return 'GMail Other'
+            return 'GMail Unknown'
     elif row['Group'] == 'Kcom':
         if 'reputation' in row['m_StatusCode']:
             return 'Microsoft Reputation Block'
@@ -197,7 +199,7 @@ def blocker (row):
         elif '6.0' in row['m_StatusCode']:
             return 'Microsoft Reputation Block'   
         else:
-            return 'Microsoft Other'
+            return 'Microsoft Unknown'
     elif row['Group'] == 'Office365':
         if '4.0.0' in row['m_StatusCode']:
             return 'Office365 Throttled'
@@ -205,10 +207,14 @@ def blocker (row):
             return 'Office365 Throttled'
         elif '5.5.0' in row['m_StatusCode']:
             return 'Office365 Reputation Block'
+        elif '5.5.4' in row['m_StatusCode']:
+            return 'Office365 Reputation Block'
+        elif '5.5.6' in row['m_StatusCode']:
+            return 'Office365 No MX'    
         elif '6.0' in row['m_StatusCode']:
             return 'Office365 Reputation Block'   
         else:
-            return 'Office365 Other'
+            return 'Office365 Unknown'
     elif row['Group'] == 'Talk Talk':
         if '4.0.0' in row['m_StatusCode']:
             return 'Talk Talk Throttled'
@@ -219,12 +225,14 @@ def blocker (row):
         elif '6.0' in row['m_StatusCode']:
             return 'Talk Talk Reputation Block'    
         else:
-            return 'Talk Talk Other'
+            return 'Talk Talk Unknown'
     elif row['Group'] == 'Verizon':
         if '4.0.0' in row['m_StatusCode']:
             return 'Verizon Throttled'        
         elif row['m_StatusCode'] == '4.2.1':
             return 'Verizon Reputation Block'
+        elif row['m_StatusCode'] == '4.5.0':
+            return 'Verizon Reputation Throttle'
         elif row['m_StatusCode'] == '4.5.1':
             return 'Verizon Reputation Block'      
         elif '6.0' in row['m_StatusCode']:
@@ -232,12 +240,14 @@ def blocker (row):
         elif ('content rejected') in str(row['m_LogEntry']).lower():
             return 'Verizon Spam Block'    
         else:
-            return 'Verizon Other'
+            return 'Verizon Unknown'
     elif row['Group'] == 'Virgin':
         if '4.0.0' in row['m_StatusCode']:
             return 'Virgin Throttled'        
         elif row['m_StatusCode'] == '4.5.1':
             return 'Mimecast Reputation Block'
+        elif row['m_StatusCode'] == '4.5.2':
+            return 'Virgin Reputation Block'
         elif row['m_StatusCode'] == '4.2.1':
             return 'Virgin Reputation Block'     
         elif row['m_StatusCode'] == '5.5.4':
@@ -245,9 +255,175 @@ def blocker (row):
         elif '6.0' in row['m_StatusCode']:
             return 'Virgin Reputation Block'    
         else:
-            return 'Virgin Other'
+            return 'Virgin Unknown'
     return 'Unknown'
 
+def deademail (row):
+    if row['m_Status'] == 'DELIVERED':
+        return 'Delivered'
+    elif  row['m_Status'] == 'FILTERED':
+        return 'Filtered'
+    elif row['m_Status'] == 'EXPIRED':
+        return 'Expired'
+    if row['Group'] == 'Other':    
+        if ('invalid mailbox') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('invalid recipient') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('invalid address') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'     
+        elif ('no mx') in str(row['m_LogEntry']).lower():
+            return 'No MX'
+        elif ('unknown') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('mail box') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'        
+        elif ('not exist') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'    
+        elif ('address rejected') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('account locked') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('mailbox') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('user not known') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'             
+        elif ('recipient undeliverable') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('recipient') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('no such') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('could not be found') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('not found') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('No user') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('deleted') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('disabled') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('permanent') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('relay') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('route') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('unroutable') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('verify') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif ('is not') in str(row['m_LogEntry']).lower() and row['m_Status'] == 'BOUNCED':
+            return 'Undeliverable email'
+        elif ('quota') in str(row['m_LogEntry']).lower():
+            return 'Over Quota'         
+        elif 'no mx' in str(row['m_LogEntry']).lower():
+            return 'No MX'
+        elif 'unknown' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'    
+        elif 'not exist' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'    
+        elif 'recipient address rejected' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'recipient undeliverable' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'recipientnotfound' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'no such' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'could not be found' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'not found' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'No user' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'deleted' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'disabled' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'permanent' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'relay' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'route' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'unroutable' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'verify' in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'
+        elif 'is not' in str(row['m_LogEntry']).lower() and row['m_Status'] == 'BOUNCED':
+            return 'Undeliverable email'
+        elif 'quota' in str(row['m_LogEntry']).lower():
+            return 'Over Quota'                 
+        return 'Other Unknown'
+    elif row['Group'] == '1&1':
+        if row['m_StatusCode'] == '5.5.0':
+            return 'Undeliverable email'        
+        else:
+            return '1&1 Unknown'
+    elif row['Group'] == 'Apple':
+        if row['m_StatusCode'] == '4.5.0':
+            return 'Over Quota'                  
+        elif '5.5.2' in row['m_StatusCode']:
+            return 'Over Quota'
+        else:
+            return 'Apple Unknown'
+    elif row['Group'] == 'BT': 
+        if '4.5.0' in row['m_StatusCode']:
+            return 'Undeliverable email'     
+        elif '4.5.1' in row['m_StatusCode']:
+            return 'Undeliverable email'     
+        else:
+            return 'BT Unknown'
+    elif row['Group'] == 'Google':                 
+        if '4.5.2' in row['m_StatusCode']:
+            return 'Over Quota'
+        elif '5.0.1' in row['m_StatusCode']:
+            return 'Undeliverable email'
+        elif '5.5.2' in row['m_StatusCode']:
+            return 'Over Quota'       
+        else:
+            return 'Google Unknown'
+    elif row['Group'] == 'GMail':               
+        if '4.5.2' in row['m_StatusCode']:
+            return 'Over Quota'
+        elif '5.0.1' in row['m_StatusCode']:
+            return 'Undeliverable email'
+        elif '5.5.2' in row['m_StatusCode']:
+            return 'Over Quota'       
+        else:
+            return 'GMail Unknown'
+    elif row['Group'] == 'Kcom':        
+            return 'Kcom Unknown'
+    elif row['Group'] == 'Microsoft':
+        if '5.0.1' in row['m_StatusCode']:
+            return 'Undeliverable email' 
+        else:
+            return 'Microsoft Unknown'
+    elif row['Group'] == 'Office365':
+        if '5.0.1' in row['m_StatusCode']:
+            return 'Office365 Undeliverable email'   
+        else:
+            return 'Office365 Unknown'
+    elif row['Group'] == 'Talk Talk':  
+        if row['m_StatusCode'] == '5.5.0':
+            return 'Undeliverable email'
+        else:
+            return 'Talk Talk Unknown'
+    elif row['Group'] == 'Verizon':  
+        if row['m_StatusCode'] == '5.5.4':
+            return 'Undeliverable email'    
+        elif ('mailbox not found') in str(row['m_LogEntry']).lower():
+            return 'Undeliverable email'  
+        else:
+            return 'Verizon Unknown'
+    elif row['Group'] == 'Virgin':
+        if row['m_StatusCode'] == '5.5.0':
+            return 'Undeliverable email'    
+        else:
+            return 'Virgin Unknown'
+    return 'Unknown'
 #Model Creation
 model = pd.read_csv("C:\\new bounce model data.csv")
 
@@ -279,11 +455,12 @@ print("Accuracy:",metrics.accuracy_score(y_test_encoded, y_pred))
 
 
 directory = 'C:/Users/Peter/Downloads/'
-file1 = 'mta_delivered_211220.csv'
-file2 = 'mta_bounced_211220.csv'
-file3 = 'mta_defered_211220.csv'
-file4 = 'mta_expired_211220.csv'
+file1 = 'mta_delivered_170121.csv'
+file2 = 'mta_bounced_170121.csv'
+file3 = 'mta_defered_170121.csv'
+file4 = 'mta_expired_170121.csv'
 file5 = 'campaignlookup_dec20.csv'
+
 
 lookupcols = ['Campaign id','Offer name', 'List name', 'Master filter', 'Brand', 'List owner']
 
@@ -334,8 +511,12 @@ df.loc[(df['owner'] == 'Microsoft') & (df['segment'] == 'B'), 'Group'] = 'Office
 df.loc[(df['owner'] == 'Google') & (df['segment'] == 'B'), 'Group'] = 'GMail'
 df['Group'].fillna('Other', inplace=True)
 df['owner'].fillna('Other', inplace=True)
-df['blocker'] = df.apply (lambda row: blocker(row), axis=1)
-df.drop(columns=['Campaign id'], inplace=True)
+df['blocker'] = df.apply(lambda row: blocker(row), axis=1)
+df['dead'] = df.apply(lambda row: deademail(row), axis=1)
+df.loc[df['dead'] == 'Undeliverable email', 'status'] = 'Undeliverable email'
+df.loc[df['dead'] == 'Over Quota', 'status'] = 'Over Quota'
+df.loc[((df['dead'] == 'No MX') & (df['status'] == 'OK')), 'status'] = 'No MX'
+df.drop(columns=['Campaign id', ], inplace=True)
 
 print(df.columns)
 print(df.shape)
@@ -348,6 +529,6 @@ print(df['blocker'].value_counts())
 unknown = df[df['blocker'].str.contains('Unknown')].copy()
 unknown.drop_duplicates(subset=['m_To'], keep='last', inplace=True)
 nomx = df[df['status']  == 'No MX']
-unknown.to_csv(directory + 'unknown1.csv', index=False)
-nomx.to_csv(directory + 'nomx1.csv', index=False)
-df.to_csv(directory + 'elastictest4.csv', index=False)
+unknown.to_csv(directory + 'unknown2.csv', index=False)
+nomx.to_csv(directory + 'nomx2.csv', index=False)
+df.to_csv(directory + 'elastictest6.csv', index=False)
