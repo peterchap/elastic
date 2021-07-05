@@ -463,16 +463,15 @@ y_pred = classifier.predict(counts_test)
 y_test_encoded = le.fit_transform(y_test)
 print("Accuracy:", metrics.accuracy_score(y_test_encoded, y_pred))
 
-mta = "rs3MTA"
+
 directory = "C:/Users/Peter/Downloads/"
-file1 = "rs3MTA_queryDELIVERED050621.csv"
-file2 = "rs4MTA_queryBOUNCED050621.csv"
-file3 = "rs4MTA_queryDEFERED050621.csv"
-file4 = "rs4MTA_queryEXPIRED050621.csv"
+file1 = "cleanMTA_queryDELIVERED070621.csv"
+file2 = "cleanMTA_queryBOUNCED070621.csv"
+file3 = "cleanMTA_queryDEFERED070621.csv"
+file4 = "cleanMTA_queryEXPIRED070621.csv"
 # file5 = "rs3MTApt3DELIVERED050621.csv"
 # file6 = "rs3MTApt3EXPIRED050621.csv"
 file7 = "cross-business-export_05_06_2021 11_47_32.csv"
-
 
 lookupcols = [
     "Campaign id",
@@ -509,7 +508,7 @@ colstouse = [
 df1 = pd.read_csv(directory + file1, encoding="utf-8", usecols=colstouse)
 df2 = pd.read_csv(directory + file2, encoding="utf-8", usecols=colstouse)
 df3 = pd.read_csv(directory + file3, encoding="utf-8", usecols=colstouse)
-df4 = pd.read_csv(directory + file4, encoding="utf-8", usecols=colstouse)
+# df4 = pd.read_csv(directory + file4, encoding="utf-8", usecols=colstouse)
 # df11 = pd.read_csv(directory + file5, encoding="utf-8", usecols=colstouse)
 # df41 = pd.read_csv(directory + file6, encoding="utf-8", usecols=colstouse)
 
@@ -525,20 +524,21 @@ df3["bounce"] = classifier.predict(bounce_counts2)
 df3["bounce"] = df3["bounce"].replace([0, 1], ["HARD", "SOFT"])
 
 df1["bounce"] = ""
-df4["bounce"] = ""
+# df4["bounce"] = ""
 # df11["bounce"] = ""
 # df41["bounce"] = ""
 
 
-df = pd.concat([df1, df2, df3, df4], ignore_index=True)
+df = pd.concat([df1, df2, df3], ignore_index=True)
+
 
 df5 = pd.read_csv(directory1 + statusfile, encoding="utf-8", usecols=statuscols)
 df6 = pd.read_csv(directory2 + isp, encoding="utf-8", usecols=ispcols)
-df7 = pd.read_csv(directory + file7, encoding="utf-8", usecols=lookupcols)
+# df7 = pd.read_csv(directory + file7, encoding="utf-8", usecols=lookupcols)
 
 df = df.merge(df5, left_on="m_RecipientDomain", right_on="name", how="left")
 df = df.merge(df6, left_on="m_RecipientDomain", right_on="Domain", how="left")
-df = df.merge(df7, left_on="m_CampaignId", right_on="Campaign id", how="left")
+# df = df.merge(df7, left_on="m_CampaignId", right_on="Campaign id", how="left")
 df.drop(columns=["name", "Domain"], inplace=True)
 df.loc[(df["owner"] == "Microsoft") & (df["segment"] == "B"), "Group"] = "Office365"
 df.loc[(df["owner"] == "Google") & (df["segment"] == "B"), "Group"] = "GMail"
@@ -549,7 +549,7 @@ df["dead"] = df.apply(lambda row: deademail(row), axis=1)
 df.loc[df["dead"] == "Undeliverable email", "status"] = "Undeliverable email"
 df.loc[df["dead"] == "Over Quota", "status"] = "Over Quota"
 df.loc[((df["dead"] == "No MX") & (df["status"] == "OK")), "status"] = "No MX"
-df.drop(columns=["Campaign id",], inplace=True)
+# df.drop(columns=["Campaign id",], inplace=True)
 
 print(df.columns)
 print(df.shape)
@@ -563,7 +563,7 @@ unknown = df[df["blocker"].str.contains("Unknown")].copy()
 unknown.drop_duplicates(subset=["m_To"], keep="last", inplace=True)
 nomx = df[df["status"] == "No MX"]
 nostatus = df[df["status"].isnull()]
-unknown.to_csv(directory + mta + "unknownrs2.csv", index=False)
-nomx.to_csv(directory + mta + "nomxrs2.csv", index=False)
-df.to_csv(directory + mta + "elastictestrs2.csv", index=False)
-nostatus.to_csv(directory + mta + "nostatus2.csv", index=False)
+unknown.to_csv(directory + "unknownrs2.csv", index=False)
+nomx.to_csv(directory + "nomxrs2.csv", index=False)
+df.to_csv(directory + "elastictestrs2.csv", index=False)
+nostatus.to_csv(directory + "nostatus2.csv", index=False)

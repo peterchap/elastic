@@ -10,8 +10,8 @@ from pandasticsearch import Select
 from elasticsearch import Elasticsearch
 
 directory = "C:/Users/Peter/Downloads/"
-mta = "rs4MTA_query"
-date = "120521"
+mta = "productionMTA_query"
+date = "290621"
 
 retry_count = 5
 for retries in range(retry_count):
@@ -59,8 +59,8 @@ for x in status:
                         {
                             "range": {
                                 "m_LogDate": {
-                                    "gte": "2021-05-01T00:00:00.000Z",
-                                    "lte": "2021-05-11",
+                                    "gte": "2021-06-17T00:00:00.000Z",
+                                    "lte": "2021-06-30",
                                 }
                             }
                         }
